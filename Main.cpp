@@ -81,7 +81,34 @@ private:
         string word,
         int index
     ) {
-        // TODO: Implement this function
+        if(node == nullptr) return false;
+        if(index == word.length()){
+            if(!node->isEndOfWord) return false;
+            node->isEndOfWord = false;
+            
+            for(int i=0; i<26; i++){
+                if(node->children[i] != nullptr) return false;
+            }
+            return true;
+        }
+
+        int idx = word[index] - 'a';
+        if(idx < 0 || idx>= 26 || node->children[idx]== nullptr){
+            return false;
+        }
+
+        bool shouldDeleteChild = removeHelper(node->children[idx], word, index+1);
+        if(shouldDeleteChild){
+            delete node->children[idx];
+            node->children[idx]= nullptr;
+
+            if(!node->isEndOfWord){
+                for(int i=0; i<26; i++){
+                    if(node->children[i] != nullptr) return false;
+                }
+                return true;
+            }
+        }
         return false;
     }
 
@@ -106,7 +133,19 @@ public:
     // Output: none
     // Purpose: Add a word to the Trie by creating nodes for each character
     void insert(string word) {
-        // TODO: Implement this function
+        TrieNode* current = root;
+        for (char ch : word) {
+            int index = ch - 'a';
+            if (current->children[index] == nullptr) {
+                current->children[index] = new TrieNode();
+            }
+            current = current->children[index];
+        }
+
+        if (!current->isEndOfWord) {
+            current->isEndOfWord = true;
+            wordCount++;
+        }
     }
     
     // Search for a word in the Trie
@@ -114,8 +153,15 @@ public:
     // Output: boolean indicating if the word exists
     // Purpose: Check if the complete word exists in the Trie
     bool search(string word) {
-        // TODO: Implement this function
-        return false; // placeholder
+       TrieNode* current = root;
+        for (char ch : word) {
+            int index = ch - 'a';
+            if (index < 0 || index >= 26 || current->children[index] == nullptr) {
+                return false;
+            }
+            current = current->children[index];
+        }
+        return current->isEndOfWord;
     }
     
     // Check if any word starts with the given prefix
@@ -124,8 +170,15 @@ public:
     // Purpose: Verify if the prefix exists in the Trie
     //          (doesn't need to be a complete word)
     bool startsWith(string prefix) {
-        // TODO: Implement this function
-        return false; // placeholder
+        TrieNode* current = root;
+        for (char ch : prefix) {
+            int index = ch - 'a';
+            if (index < 0 || index >= 26 || current->children[index] == nullptr) {
+                return false;
+            }
+            current = current->children[index];
+        }
+        return true;
     }
     
     // Get all words that start with the given prefix
@@ -150,7 +203,10 @@ public:
     // Remove: "apple"
     // "app" should still exist
     void remove(string word) {
-        // TODO: Implement this function
+        if (search(word)) {
+            removeHelper(root, word, 0);
+            wordCount--;
+        }
     }
     
     // Count the total number of words in the Trie
