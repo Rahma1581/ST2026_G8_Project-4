@@ -243,9 +243,16 @@ public:
     //
     // Input: "appreciate"
     // Output: "app"
-    string longestPrefixOf(string word) {
-        // TODO: Implement this function
-        return "";
+    string longestPrefixOf(const string& word) {
+        TrieNode* node = root;
+        string prefix = "";
+        for (char c : word) {
+            int idx = c - 'a';
+            if (idx < 0 || idx >= 26 || !node->children[idx]) break;
+            prefix.push_back(c);
+            node = node->children[idx];
+        }
+        return prefix;
     }
     
     // Check whether the Trie contains any words
