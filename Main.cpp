@@ -39,20 +39,7 @@ private:
         string currentWord,
         vector<string>& results
     ) {
-        if (node == nullptr) {
-            return;
-        }
-
-        if (node->isEndOfWord) {
-            results.push_back(currentWord);
-        }
-
-        for (int i = 0; i < 26; i++) {
-            if (node->children[i] != nullptr) {
-                char nextChar = 'a' + i;
-                findAllWords(node->children[i], currentWord + nextChar, results);
-            }
-        }
+        // TODO: Implement this function
     }
     
     // Helper function to delete all nodes recursively
