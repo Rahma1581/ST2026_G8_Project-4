@@ -39,7 +39,20 @@ private:
         string currentWord,
         vector<string>& results
     ) {
-        // TODO: Implement this function
+        if (node == nullptr) {
+            return;
+        }
+
+        if (node->isEndOfWord) {
+            results.push_back(currentWord);
+        }
+
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                char nextChar = 'a' + i;
+                findAllWords(node->children[i], currentWord + nextChar, results);
+            }
+        }
     }
     
     // Helper function to delete all nodes recursively
@@ -61,8 +74,19 @@ private:
     // Output: number of complete words below this node
     // Purpose: Count all words starting from this node
     int countWordsFromNode(TrieNode* node) {
-        // TODO: Implement this function
-        return 0;
+        if (node == nullptr) {
+            return 0;
+        }
+
+        int count = node->isEndOfWord ? 1 : 0;
+
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                count += countWordsFromNode(node->children[i]);
+            }
+        }
+
+        return count;
     }
     
     void collectWordsDFS (TrieNode* node, string currentWord, vector<string>& results){
@@ -199,7 +223,7 @@ public:
             current = current->children[index];
         }
 
-        collectWordsDFS(current, prefix, suggestions);
+        findAllWords(current, prefix, suggestions);
         
         return suggestions;
     }
@@ -234,8 +258,20 @@ public:
     // Output: number of words
     // Purpose: Count all complete words that begin with the prefix
     int countWordsWithPrefix(string prefix) {
-        // TODO: Implement this function
-        return 0;
+        TrieNode* current = root;
+
+        for (char ch : prefix) {
+            int index = ch - 'a';
+
+            if (index < 0 || index >= 26 || current->children[index] == nullptr) {
+                return 0;
+            }
+
+            current = current->children[index];
+        }
+
+        return countWordsFromNode(current);
+
     }
     
     // Get all words stored in the Trie
@@ -308,11 +344,18 @@ public:
     // apple
     // application
     vector<string> autocomplete(string prefix, int limit) {
-        vector<string> suggestions;
-        
-        // TODO: Implement this function
-        
+        vector<string> suggestions = autocomplete(prefix);
+
+        if (limit < 0) {
+            limit = 0;
+        }
+
+        if (suggestions.size() > static_cast<size_t>(limit)) {
+            suggestions.resize(limit);
+        }
+
         return suggestions;
+        
     }
 };
 
