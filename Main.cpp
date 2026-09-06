@@ -213,9 +213,9 @@ public:
     // Input: none
     // Output: number of words
     // Purpose: Return how many unique complete words exist in the Trie
-    int countWords() {
-        // TODO: Implement this function
-        return 0;
+    int countWords() 
+    {
+    return wordCount;
     }
     
     // Count how many words start with a given prefix
@@ -259,17 +259,21 @@ public:
     // Input: none
     // Output: true if empty, false otherwise
     // Purpose: Check if the Trie has no stored words
-    bool isEmpty() {
-        // TODO: Implement this function
-        return true; // placeholder
+
+    bool isEmpty() 
+    {
+    return wordCount == 0;
     }
     
     // Remove all words from the Trie
     // Input: none
     // Output: none
     // Purpose: Completely clear the Trie
-    void clear() {
-        // TODO: Implement this function
+    void clear()
+    {
+    deleteNodes(root);
+    root = new TrieNode();
+    wordCount = 0;
     }
     
     // Get autocomplete suggestions with a maximum limit
