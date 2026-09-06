@@ -65,17 +65,20 @@ private:
         return 0;
     }
     
+    void collectWordsDFS (TrieNode* node, string currentWord, vector<string>& results){
+        if (node == nullptr) return;
+        if(node->isEndOfWord){
+            results.push_back(currentWord);
+        }
+        for (int i =0; i<26; i++){
+            if(node->children[i] != nullptr){
+                char nextChar ='a'+i;
+                collectWordsDFS(node->children[i], currentWord + nextChar,results );
+            }
+        }
+    }
     // Helper function to remove a word recursively
-    // Input:
-    // node       -> current node
-    // word       -> word to remove
-    // index      -> current character index
-    //
-    // Output:
-    // true if the current node can be deleted
-    //
-    // Purpose:
-    // Remove the word while deleting unnecessary nodes
+
     bool removeHelper(
         TrieNode* node,
         string word,
@@ -187,8 +190,16 @@ public:
     // Purpose: Find all complete words that begin with the given prefix
     vector<string> autocomplete(string prefix) {
         vector<string> suggestions;
-        
-        // TODO: Implement this function
+        TrieNode* current =root;
+        for(char ch:prefix){
+            int index = ch -'a';
+         if (index < 0 || index >= 26 || current->children[index] == nullptr) {
+                return suggestions; 
+            }
+            current = current->children[index];
+        }
+
+        collectWordsDFS(current, prefix, suggestions);
         
         return suggestions;
     }
