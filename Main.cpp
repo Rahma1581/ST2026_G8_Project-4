@@ -39,7 +39,24 @@ private:
         string currentWord,
         vector<string>& results
     ) {
-        // TODO: Implement this function
+        // If the current node represents the end of a word,
+        // add the completed word to the results
+        if (node->isEndOfWord) {
+            results.push_back(currentWord);
+        }
+
+        // DFS traversal through all possible children
+        for (int i = 0; i < 26; i++) {
+            if (node->children[i] != nullptr) {
+                char nextChar = 'a' + i;
+
+                findAllWords(
+                    node->children[i],
+                    currentWord + nextChar,
+                    results
+                );
+            }
+        }
     }
     
     // Helper function to delete all nodes recursively
@@ -267,9 +284,9 @@ public:
     // Purpose: Return every complete word stored in the Trie
     vector<string> getAllWords() {
         vector<string> words;
-        
-        // TODO: Implement this function
-        
+
+        findAllWords(root, "", words);
+
         return words;
     }
     
